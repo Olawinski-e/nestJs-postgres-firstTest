@@ -1,18 +1,21 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './article.entity';
+import { Crud } from '@nestjsx/crud';
 
+@Crud({
+  model: {
+    type: Article,
+  },
+  query: {
+    join: {
+      author: {
+        eager: true,
+      },
+    },
+  },
+})
 @Controller('articles')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
-
-  @Get()
-  getArticles() {
-    return this.articleService.findAll();
-  }
-
-  @Post()
-  createArticle(@Body() body: Article) {
-    return this.articleService.create(body);
-  }
+  constructor(public service: ArticleService) {}
 }
